@@ -1,0 +1,31 @@
+% Secuencia binaria original de 8 bits
+secuencia_original = [1 0 1 1 0 1 0 1];
+
+% Matriz de paridad para la detección de errores
+matriz_p = [1 1 0 1 0 0 0; 
+            0 1 1 0 1 0 0; 
+            1 0 1 0 0 1 0; 
+            1 1 1 0 0 0 1];
+
+% Cálculo del código de paridad
+codigo_p = mod(secuencia_original * matriz_p,2);
+
+% Introducir un error en el tercer bit
+secuencia_con_error = secuencia_original;
+secuencia_con_error(3) = ~secuencia_con_error(3);
+
+% Cálculo del código de paridad con error
+codigo_p_error = mod(secuencia_con_error * matriz_p,2);
+
+% Detección y corrección del error
+error_detectado = find(sum(codigo_p_error == codigo_p,2) == size(codigo_p,2));
+if ~isempty(error_detectado)
+    secuencia_corregida = secuencia_con_error;
+    secuencia_corregida(error_detectado) = ~secuencia_corregida(error_detectado);
+    disp('Error corregido:');
+    disp(['Secuencia original: ' num2str(secuencia_original)]);
+    disp(['Secuencia con error: ' num2str(secuencia_con_error)]);
+    disp(['Secuencia corregida: ' num2str(secuencia_corregida)]);
+else
+    disp('No se detectaron errores o no se pudieron corregir.');
+end
